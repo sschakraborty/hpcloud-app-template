@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript">
+			var title = "Person";
+			var model = {
+				firstName: "",
+				middleName: "",
+				lastName: ""
+			};
+			var fieldName = {
+				firstName: "First Name",
+				middleName: "Middle Name",
+				lastName: "Last Name"
+			};
+			var postURL = "/api/1/Person";
+		</script>
+		
+		<!-- Do not change anything under this -->
+		<style type="text/css">
+			table {
+				border: 2px solid #000000;
+				border-radius: 5px;
+				padding: 5px;
+				width: 100%;
+			}
+			table tr th, table tr td {
+				padding: 5px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div><h1 id="title_container"></h1></div>
+		<div id="app">
+			<table id="form_data_construct_id" align="center"></table>
+			<hr color="#000000">
+			<table id="form_data_display_id" align="center"></table>
+		</div>
+		
+		<script type="text/javascript" src="jsutil/createLogic.js"></script>
+	</body>
+</html>

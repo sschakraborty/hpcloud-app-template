@@ -1,9 +1,8 @@
 package com.verticle;
 
-import org.hibernate.Session;
-
 import com.App;
 import com.entity.Person;
+import com.facade.PersonFacade;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
@@ -26,15 +25,14 @@ public class WebVerticle extends AbstractVerticle {
 		staticHandler.setCachingEnabled(false);
 		
 		router.route().handler(BodyHandler.create());
-		router.route("/").handler(staticHandler);
+		router.route("/*").handler(staticHandler);
 		
 		// Read portion of the code
-		router.route(HttpMethod.GET, "/api/1/Person/read/:id").handler(context -> {
+		router.route(HttpMethod.GET, "/api/1/Person/:id").handler(context -> {
 			context.response().putHeader("Content-type", "application/json");
 			vertx.executeBlocking(future -> {
-				Session session = App.getSession();
-				Person person = session.find(Person.class, Long.parseLong(context.request().getParam("id")));
-				session.close();
+				Long id = Long.parseLong(context.request().getParam("id"));
+				Person person = PersonFacade.get().find(id);
 				future.complete(JsonObject.mapFrom(person).encodePrettily());
 			}, result -> {
 				context.response().end((String) result.result());
@@ -42,21 +40,11 @@ public class WebVerticle extends AbstractVerticle {
 		});
 		
 		// Delete portion of the code
-		router.route(HttpMethod.GET, "/api/1/Person/delete/:id").handler(context -> {
+		router.route(HttpMethod.DELETE, "/api/1/Person/:id").handler(context -> {
 			context.response().putHeader("Content-type", "application/json");
 			vertx.executeBlocking(future -> {
-				System.out.println(context.request().getParam("id"));
-				Session session = App.getSession();
 				Long id = Long.parseLong(context.request().getParam("id"));
-				Person p = session.find(Person.class, id);
-				
-				session.beginTransaction();
-				if(p != null) {
-					// session.delete(p);
-					session.remove(p);
-				}
-				session.getTransaction().commit();
-				session.close();
+				PersonFacade.get().delete(id);
 				future.complete();
 			}, result -> {
 				JsonObject object = new JsonObject();
@@ -70,17 +58,39 @@ public class WebVerticle extends AbstractVerticle {
 		});
 		
 		router.route(HttpMethod.POST, "/api/1/Person").handler(context -> {
-			JsonObject body = context.getBodyAsJson();
-			Person p = body.mapTo(Person.class);
-			Session session = App.getSession();
-			session.beginTransaction();
-			session.save(p);
-			session.getTransaction().commit();
-			session.close();
-			JsonObject resp = new JsonObject();
-			resp.put("message", "successful");
-			context.response().putHeader("Content-type", "application/json");
-			context.response().end(resp.encodePrettily());
+			vertx.executeBlocking(future -> {
+				JsonObject body = context.getBodyAsJson();
+				Person p = body.mapTo(Person.class);
+				PersonFacade.get().create(p);
+				future.complete();
+			}, result -> {
+				JsonObject resp = new JsonObject();
+				if(result.succeeded()) {
+					resp.put("message", "successful");
+				} else {
+					resp.put("message", "failure");
+				}
+				context.response().putHeader("Content-type", "application/json");
+				context.response().end(resp.encodePrettily());
+			});
+		});
+		
+		router.route(HttpMethod.PUT, "/api/1/Person").handler(context -> {
+			vertx.executeBlocking(future -> {
+				JsonObject body = context.getBodyAsJson();
+				Person p = body.mapTo(Person.class);
+				PersonFacade.get().update(p);
+				future.complete();
+			}, result -> {
+				JsonObject resp = new JsonObject();
+				if(result.succeeded()) {
+					resp.put("message", "successful");
+				} else {
+					resp.put("message", "failure");
+				}
+				context.response().putHeader("Content-type", "application/json");
+				context.response().end(resp.encodePrettily());
+			});
 		});
 		
 		server.requestHandler(router::accept).listen(App.webPort());
