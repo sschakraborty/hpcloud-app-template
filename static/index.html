@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Person</title>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript">
+			var title = "Person";
+			var model = {
+				firstName: "",
+				middleName: "",
+				lastName: ""
+			};
+			var fieldName = {
+				firstName: "First Name",
+				middleName: "Middle Name",
+				lastName: "Last Name"
+			};
+			var postURL = "/api/1/Person";
+		</script>
+		
+		<!-- Do not change anything under this -->
+		<style type="text/css">
+			table {
+				border: 2px solid #000000;
+				border-radius: 5px;
+				padding: 5px;
+				width: 100%;
+			}
+			table tr th, table tr td {
+				padding: 5px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div id="app">
+			<table id="form_data_construct_id" align="center"></table>
+			<hr color="#000000">
+			<table id="form_data_display_id" align="center"></table>
+		</div>
+		
+		<script type="text/javascript">
+			var status = "";
+			var resetFunction = function() {
+				for(field in model) {
+					model[field] = "";
+				}
+			}
+			var mapTypes = function(type) {
+				if(type == "number") return type;
+				else if(type == "string") return "text";
+				else if(type == "boolean") return "checkbox";
+				else "unknown";
+			}
+			var html = "";
+			for(field in model) {
+				html += "<tr>";
+					html += "<th align='right'>" + fieldName[field] + "</th>";
+					html += "<td align='left'>{{ model." + field + " }}</td>";
+				html += "</tr>";
+			}
+			$("#form_data_display_id").html(html);
+			html = "";
+			for(field in model) {
+				html += "<tr>";
+					html += "<th align='right'>" + fieldName[field] + "</th>";
+					html += "<td align='left'>";
+						html += "<input type='" + mapTypes(typeof model[field]);
+						html += "' v-model='model." + field + "' />";
+					html += "</td>";
+				html += "</tr>";
+			}
+			html += "<tr><th align='center' colspan='2'>";
+				html += "<button v-on:click='post'>Create</button>";
+				html += "<button v-on:click='reset'>Reset</button>";
+			html += "</th></tr>";
+			$("#form_data_construct_id").html(html);
+		</script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: '#app',
+				data: {
+					model,
+					status
+				},
+				methods: {
+					post: function() {
+						var self = this;
+						self.status = "Please wait...";
+						$.post(postURL, JSON.stringify(model), function(msg) {
+							if(msg.message == "successful") {
+								self.status = "Successful!";
+								resetFunction();
+							} else {
+								self.status = "Operation failed!";
+							}
+						}, "json");
+					},
+					reset: function() {
+						resetFunction();
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

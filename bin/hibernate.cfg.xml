@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.provider_class">com.zaxxer.hikari.hibernate.HikariConnectionProvider</property>
+        <property name="hibernate.hikari.connectionTimeout">10000</property>
+        <property name="hibernate.hikari.minimumIdle">20</property>
+        <property name="hibernate.hikari.maximumPoolSize">24</property>
+        <property name="hibernate.hikari.idleTimeout">200000</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/PersonDB</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">2010ottawa</property>
+
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!-- Enable the second-level cache  -->
+        <property name="hibernate.cache.region_prefix">hibernate.cache</property>
+		<property name="cache.use_query_cache">true</property>
+        <property name="cache.use_second_level_cache">true</property>
+        <property name="cache.use_structured_entries">true</property>
+        <property name="cache.region.factory_class">org.hibernate.cache.EhCacheRegionFactory</property>
+        <property name="net.sf.ehcache.configurationResourceName">ehcache.xml</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <!-- <property name="hbm2ddl.auto">create</property> -->
+
+        <!-- Names the annotated entity class -->
+        <mapping class="com.entity.Person"/>
+
+    </session-factory>
+</hibernate-configuration>
