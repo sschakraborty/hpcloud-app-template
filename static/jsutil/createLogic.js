@@ -57,7 +57,7 @@ var app = new Vue({
 			var self = this;
 			self.status = "Please wait...";
 			$.post(postURL, JSON.stringify(model), function(msg) {
-				if(msg.message == "successful") {
+				if(msg.message == "success") {
 					self.status = "Successful!";
 					resetFunction();
 				} else {

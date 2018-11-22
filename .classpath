@@ -149,5 +149,7 @@
 	<classpathentry kind="lib" path="/home/sschakraborty/Downloads/hibernate-release-5.3.7.Final/lib/optional/hikaricp/hibernate-hikaricp-5.3.7.Final.jar"/>
 	<classpathentry kind="lib" path="/home/sschakraborty/Downloads/hibernate-release-5.3.7.Final/lib/optional/hikaricp/HikariCP-2.5.1.jar"/>
 	<classpathentry kind="lib" path="/home/sschakraborty/Downloads/hibernate-release-5.3.7.Final/lib/optional/hikaricp/slf4j-api-1.7.21.jar"/>
+	<classpathentry kind="lib" path="/home/sschakraborty/Downloads/apache-freemarker-2.3.28-bin/freemarker.jar"/>
+	<classpathentry kind="lib" path="/home/sschakraborty/Downloads/vertx-web-templ-freemarker-3.5.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

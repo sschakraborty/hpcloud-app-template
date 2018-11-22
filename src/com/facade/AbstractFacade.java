@@ -11,6 +11,10 @@ public abstract class AbstractFacade<T> {
 		entityClass = object;
 	}
 	
+	public Class<T> getEntityClass() {
+		return entityClass;
+	}
+	
 	public T find(Long id) {
 		try {
 			Session session = App.getSession();
